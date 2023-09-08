@@ -7,11 +7,11 @@
 package lldb
 
 import (
-	"github.com/mongodb-labs/mongoreplay/internal/legacy/lldb/kerberos"
-	"github.com/mongodb-labs/mongoreplay/internal/legacy/options"
-	"github.com/mongodb-labs/mongoreplay/internal/legacy/util"
 	"net"
 	"time"
+
+	"github.com/mongodb-labs/mongoreplay/internal/legacy/options"
+	"github.com/mongodb-labs/mongoreplay/internal/legacy/util"
 
 	mgo "github.com/mongodb-labs/mongoreplay/internal/llmgo"
 )
@@ -68,8 +68,6 @@ func (self *VanillaDBConnector) Configure(opts options.ToolOptions) error {
 	} else {
 		self.dialInfo.Addrs = util.CreateConnectionAddrs(opts.Host, opts.Port)
 	}
-
-	kerberos.AddKerberosOpts(opts, self.dialInfo)
 
 	return nil
 }

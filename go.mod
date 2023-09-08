@@ -4,7 +4,6 @@ go 1.13
 
 require (
 	github.com/10gen/escaper v0.0.0-20160802155924-17fe61c658dc
-	github.com/10gen/openssl v0.0.0-20190731121843-f50700cbcaf4
 	github.com/golang/snappy v0.0.1
 	github.com/google/gopacket v1.1.17
 	github.com/howeyc/gopass v0.0.0-20190910152052-7cb4b85ec19c
@@ -12,7 +11,6 @@ require (
 	github.com/kr/pretty v0.2.0 // indirect
 	github.com/patrickmn/go-cache v2.1.0+incompatible
 	github.com/smartystreets/goconvey v1.6.4
-	github.com/spacemonkeygo/spacelog v0.0.0-20180420211403-2296661a0572 // indirect
 	github.com/xdg/stringprep v1.0.0
 	golang.org/x/crypto v0.0.0-20190308221718-c2843e01d9a2
 	golang.org/x/text v0.3.2 // indirect
