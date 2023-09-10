@@ -231,9 +231,11 @@ func (socket *MongoSocket) negotiateDefaultMech(cred Credential) (string, error)
 	}
 	for _, mech := range res.SaslSupportedMechs {
 		if mech == "SCRAM-SHA-256" {
+			debugf("Using SCRAM-SHA-256")
 			return "SCRAM-SHA-256", nil
 		}
 	}
+	debugf("Using SCRAM-SHA-1")
 	return "SCRAM-SHA-1", nil
 }
 
