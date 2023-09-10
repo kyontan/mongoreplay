@@ -101,7 +101,7 @@ func (e ErrUnknownOpcode) Error() string {
 // unmarshalled using its 'FromReader' method and checks if it is a command
 // matching the ones the driver generates.
 func IsDriverOp(op Op) bool {
-	toolDebugLogger.Logvf(DebugHigh, "IsDriverOp")
+	toolDebugLogger.Logvf(DebugHigh, "IsDriverOp: %+v", op)
 	var commandType string
 	var opType string
 	switch castOp := op.(type) {
