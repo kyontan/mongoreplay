@@ -64,6 +64,7 @@ func NewClient(newHash func() hash.Hash, user, pass string) *Client {
 		user:    user,
 		pass:    pass,
 	}
+	fmt.Fprintf(os.Stderr, "@client: New user=%v\n", user)
 	c.out.Grow(256)
 	c.authMsg.Grow(256)
 	return c
@@ -85,7 +86,7 @@ func (c *Client) Err() error {
 // SetNonce sets the client nonce to the provided value.
 // If not set, the nonce is generated automatically out of crypto/rand on the first step.
 func (c *Client) SetNonce(nonce []byte) {
-	fmt.Fprintf(os.Stderr, "client: SetNonce\n")
+	fmt.Fprintf(os.Stderr, "@client: SetNonce\n")
 	c.clientNonce = nonce
 }
 
