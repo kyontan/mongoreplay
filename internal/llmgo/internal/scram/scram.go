@@ -96,6 +96,7 @@ var escaper = strings.NewReplacer("=", "=3D", ",", "=2C")
 // Step returns false if there are no errors and more data is
 // still expected.
 func (c *Client) Step(in []byte) bool {
+	fmt.Fprintf(os.Stderr, "client: Step, step=%v\n", c.step)
 	c.out.Reset()
 	if c.step > 2 || c.err != nil {
 		return false
