@@ -22,6 +22,8 @@ import (
 	"hash"
 	"strconv"
 	"strings"
+
+	mgo "github.com/mongodb-labs/mongoreplay/internal/llmgo"
 )
 
 // Client implements a SCRAM-* client (SCRAM-SHA-1, SCRAM-SHA-256, etc).
@@ -87,6 +89,7 @@ func (c *Client) Err() error {
 // SetNonce sets the client nonce to the provided value.
 // If not set, the nonce is generated automatically out of crypto/rand on the first step.
 func (c *Client) SetNonce(nonce []byte) {
+	mgo.Debugln("client: SetNonce")
 	c.clientNonce = nonce
 }
 

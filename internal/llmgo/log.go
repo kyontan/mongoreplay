@@ -114,3 +114,33 @@ func debugf(format string, v ...interface{}) {
 		globalLogger.Output(2, fmt.Sprintf(format, v...))
 	}
 }
+
+func Debug(v ...interface{}) {
+	if raceDetector {
+		globalMutex.Lock()
+		defer globalMutex.Unlock()
+	}
+	if globalDebug && globalLogger != nil {
+		globalLogger.Output(2, fmt.Sprint(v...))
+	}
+}
+
+func Debugln(v ...interface{}) {
+	if raceDetector {
+		globalMutex.Lock()
+		defer globalMutex.Unlock()
+	}
+	if globalDebug && globalLogger != nil {
+		globalLogger.Output(2, fmt.Sprintln(v...))
+	}
+}
+
+func Debugf(format string, v ...interface{}) {
+	if raceDetector {
+		globalMutex.Lock()
+		defer globalMutex.Unlock()
+	}
+	if globalDebug && globalLogger != nil {
+		globalLogger.Output(2, fmt.Sprintf(format, v...))
+	}
+}
