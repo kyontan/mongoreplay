@@ -764,7 +764,9 @@ func (s *Session) Login(cred *Credential) error {
 }
 
 func (s *Session) socketLogin(socket *MongoSocket) error {
+	debug("socketLogin\n")
 	for _, cred := range s.creds {
+		debug("socketLogin - calls socket.Login\n")
 		if err := socket.Login(cred); err != nil {
 			return err
 		}
@@ -3620,6 +3622,7 @@ func (iter *Iter) For(result interface{}, f func() error) (err error) {
 // socket depends on the cluster sync loop, and the cluster sync loop might
 // attempt actions which cause replyFunc to be called, inducing a deadlock.
 func (iter *Iter) acquireSocket() (*MongoSocket, error) {
+	debug("acquireSocket\n")
 	socket, err := iter.session.AcquireSocketPrivate(true)
 	if err != nil {
 		return nil, err
@@ -4122,6 +4125,7 @@ func (s *Session) BuildInfo() (info BuildInfo, err error) {
 // Internal session handling helpers.
 
 func (s *Session) AcquireSocketPrivate(slaveOk bool) (*MongoSocket, error) {
+	debug("AcquireSocketPrivate\n")
 
 	// Read-only lock to check for previously reserved socket.
 	s.m.RLock()
@@ -4185,6 +4189,7 @@ func (s *Session) AcquireSocketPrivate(slaveOk bool) (*MongoSocket, error) {
 }
 
 func (s *Session) AcquireSocketDirect() (*MongoSocket, error) {
+	debug("AcquireSocketDirect\n")
 	sock, err := s.cluster().AcquireSocket(Strong, false, s.syncTimeout, s.sockTimeout, s.queryConfig.op.ServerTags, s.poolLimit)
 	if err != nil {
 		return nil, err
