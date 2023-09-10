@@ -111,6 +111,8 @@ func IsDriverOp(op Op) bool {
 		if opType != "command" {
 			return false
 		}
+	case *MsgOp:
+		commandType = castOp.CommandName
 	case *CommandOp:
 		commandType = castOp.CommandName
 	default:
