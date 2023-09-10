@@ -154,15 +154,15 @@ const defaultPrefetch = 0.25
 //
 // The seed servers must be provided in the following format:
 //
-//     [mongodb://][user:pass@]host1[:port1][,host2[:port2],...][/database][?options]
+//	[mongodb://][user:pass@]host1[:port1][,host2[:port2],...][/database][?options]
 //
 // For example, it may be as simple as:
 //
-//     localhost
+//	localhost
 //
 // Or more involved like:
 //
-//     mongodb://myuser:mypass@localhost:40001,otherhost:40001/mydb
+//	mongodb://myuser:mypass@localhost:40001,otherhost:40001/mydb
 //
 // If the port number is not provided for a server, it defaults to 27017.
 //
@@ -173,42 +173,40 @@ const defaultPrefetch = 0.25
 //
 // The following connection options are supported after the question mark:
 //
-//     connect=direct
+//	connect=direct
 //
-//         Disables the automatic replica set server discovery logic, and
-//         forces the use of servers provided only (even if secondaries).
-//         Note that to talk to a secondary the consistency requirements
-//         must be relaxed to Monotonic or Eventual via SetMode.
-//
-//
-//     authSource=<db>
-//
-//         Informs the database used to establish credentials and privileges
-//         with a MongoDB server. Defaults to the database name provided via
-//         the URL path, and "admin" if that's unset.
+//	    Disables the automatic replica set server discovery logic, and
+//	    forces the use of servers provided only (even if secondaries).
+//	    Note that to talk to a secondary the consistency requirements
+//	    must be relaxed to Monotonic or Eventual via SetMode.
 //
 //
-//     authMechanism=<mechanism>
+//	authSource=<db>
 //
-//        Defines the protocol for credential negotiation. Defaults to "MONGODB-CR",
-//        which is the default username/password challenge-response mechanism.
+//	    Informs the database used to establish credentials and privileges
+//	    with a MongoDB server. Defaults to the database name provided via
+//	    the URL path, and "admin" if that's unset.
 //
 //
-//     gssapiServiceName=<name>
+//	authMechanism=<mechanism>
 //
-//        Defines the service name to use when authenticating with the GSSAPI
-//        mechanism. Defaults to "mongodb".
+//	   Defines the protocol for credential negotiation. Defaults to "MONGODB-CR",
+//	   which is the default username/password challenge-response mechanism.
 //
-//     maxPoolSize=<limit>
 //
-//        Defines the per-server socket pool limit. Defaults to 4096.
-//        See Session.SetPoolLimit for details.
+//	gssapiServiceName=<name>
 //
+//	   Defines the service name to use when authenticating with the GSSAPI
+//	   mechanism. Defaults to "mongodb".
+//
+//	maxPoolSize=<limit>
+//
+//	   Defines the per-server socket pool limit. Defaults to 4096.
+//	   See Session.SetPoolLimit for details.
 //
 // Relevant documentation:
 //
-//     http://docs.mongodb.org/manual/reference/connection-string/
-//
+//	http://docs.mongodb.org/manual/reference/connection-string/
 func Dial(url string) (*Session, error) {
 	session, err := DialWithTimeout(url, 10*time.Second)
 	if err == nil {
@@ -586,10 +584,9 @@ func (c *Collection) With(s *Session) *Collection {
 //
 // Relevant documentation:
 //
-//     http://www.mongodb.org/display/DOCS/GridFS
-//     http://www.mongodb.org/display/DOCS/GridFS+Tools
-//     http://www.mongodb.org/display/DOCS/GridFS+Specification
-//
+//	http://www.mongodb.org/display/DOCS/GridFS
+//	http://www.mongodb.org/display/DOCS/GridFS+Tools
+//	http://www.mongodb.org/display/DOCS/GridFS+Specification
 func (db *Database) GridFS(prefix string) *GridFS {
 	return newGridFS(db, prefix)
 }
@@ -604,16 +601,15 @@ func (db *Database) GridFS(prefix string) *GridFS {
 // use an ordering-preserving document, such as a struct value or an
 // instance of bson.D.  For instance:
 //
-//     db.Run(bson.D{{"create", "mycollection"}, {"size", 1024}})
+//	db.Run(bson.D{{"create", "mycollection"}, {"size", 1024}})
 //
 // For privilleged commands typically run on the "admin" database, see
 // the Run method in the Session type.
 //
 // Relevant documentation:
 //
-//     http://www.mongodb.org/display/DOCS/Commands
-//     http://www.mongodb.org/display/DOCS/List+of+Database+CommandSkips
-//
+//	http://www.mongodb.org/display/DOCS/Commands
+//	http://www.mongodb.org/display/DOCS/List+of+Database+CommandSkips
 func (db *Database) Run(cmd interface{}, result interface{}) error {
 	socket, err := db.Session.AcquireSocketPrivate(true)
 	if err != nil {
@@ -626,7 +622,7 @@ func (db *Database) Run(cmd interface{}, result interface{}) error {
 	return err
 }
 
-//returns metadata, bodydata, an array of reply documents, a reply, and an error
+// returns metadata, bodydata, an array of reply documents, a reply, and an error
 func ExecOpWithReply(socket *MongoSocket, op OpWithReply) ([]byte, []byte, [][]byte, interface{}, error) {
 	debug("ExecOpWithReply\n")
 	var wait sync.Mutex
@@ -820,9 +816,8 @@ func (s *Session) LogoutAll() {
 //
 // Relevant documentation:
 //
-//     http://docs.mongodb.org/manual/reference/privilege-documents/
-//     http://docs.mongodb.org/manual/reference/user-privileges/
-//
+//	http://docs.mongodb.org/manual/reference/privilege-documents/
+//	http://docs.mongodb.org/manual/reference/user-privileges/
 type User struct {
 	// Username is how the user identifies itself to the system.
 	Username string `bson:"user"`
@@ -886,9 +881,8 @@ const (
 //
 // Relevant documentation:
 //
-//     http://docs.mongodb.org/manual/reference/user-privileges/
-//     http://docs.mongodb.org/manual/reference/privilege-documents/
-//
+//	http://docs.mongodb.org/manual/reference/user-privileges/
+//	http://docs.mongodb.org/manual/reference/privilege-documents/
 func (db *Database) UpsertUser(user *User) error {
 	if user.Username == "" {
 		return fmt.Errorf("user has no Username")
@@ -1178,11 +1172,11 @@ func parseIndexKey(key []string) (*indexKeyInfo, error) {
 //
 // This example:
 //
-//     err := collection.EnsureIndexKey("a", "b")
+//	err := collection.EnsureIndexKey("a", "b")
 //
 // Is equivalent to:
 //
-//     err := collection.EnsureIndex(mgo.Index{Key: []string{"a", "b"}})
+//	err := collection.EnsureIndex(mgo.Index{Key: []string{"a", "b"}})
 //
 // See the EnsureIndex method for more details.
 func (c *Collection) EnsureIndexKey(key ...string) error {
@@ -1199,14 +1193,14 @@ func (c *Collection) EnsureIndexKey(key ...string) error {
 //
 // For example:
 //
-//     index := Index{
-//         Key: []string{"lastname", "firstname"},
-//         Unique: true,
-//         DropDups: true,
-//         Background: true, // See notes.
-//         Sparse: true,
-//     }
-//     err := collection.EnsureIndex(index)
+//	index := Index{
+//	    Key: []string{"lastname", "firstname"},
+//	    Unique: true,
+//	    DropDups: true,
+//	    Background: true, // See notes.
+//	    Sparse: true,
+//	}
+//	err := collection.EnsureIndex(index)
 //
 // The Key value determines which fields compose the index. The index ordering
 // will be ascending by default.  To obtain an index with a descending order,
@@ -1214,7 +1208,7 @@ func (c *Collection) EnsureIndexKey(key ...string) error {
 // also be optionally prefixed by an index kind, as in "$text:summary" or
 // "$2d:-point". The key string format is:
 //
-//     [$<kind>:][-]<field name>
+//	[$<kind>:][-]<field name>
 //
 // If the Unique field is true, the index must necessarily contain only a single
 // document per Key.  With DropDups set to true, documents with the same key
@@ -1233,15 +1227,15 @@ func (c *Collection) EnsureIndexKey(key ...string) error {
 // and remove documents containing an indexed time.Time field with a value
 // older than ExpireAfter. See the documentation for details:
 //
-//     http://docs.mongodb.org/manual/tutorial/expire-data
+//	http://docs.mongodb.org/manual/tutorial/expire-data
 //
 // Other kinds of indexes are also supported through that API. Here is an example:
 //
-//     index := Index{
-//         Key: []string{"$2d:loc"},
-//         Bits: 26,
-//     }
-//     err := collection.EnsureIndex(index)
+//	index := Index{
+//	    Key: []string{"$2d:loc"},
+//	    Bits: 26,
+//	}
+//	err := collection.EnsureIndex(index)
 //
 // The example above requests the creation of a "2d" index for the "loc" field.
 //
@@ -1255,12 +1249,11 @@ func (c *Collection) EnsureIndexKey(key ...string) error {
 //
 // Relevant documentation:
 //
-//     http://www.mongodb.org/display/DOCS/Indexes
-//     http://www.mongodb.org/display/DOCS/Indexing+Advice+and+FAQ
-//     http://www.mongodb.org/display/DOCS/Indexing+as+a+Background+Operation
-//     http://www.mongodb.org/display/DOCS/Geospatial+Indexing
-//     http://www.mongodb.org/display/DOCS/Multikeys
-//
+//	http://www.mongodb.org/display/DOCS/Indexes
+//	http://www.mongodb.org/display/DOCS/Indexing+Advice+and+FAQ
+//	http://www.mongodb.org/display/DOCS/Indexing+as+a+Background+Operation
+//	http://www.mongodb.org/display/DOCS/Geospatial+Indexing
+//	http://www.mongodb.org/display/DOCS/Multikeys
 func (c *Collection) EnsureIndex(index Index) error {
 	keyInfo, err := parseIndexKey(index.Key)
 	if err != nil {
@@ -1335,9 +1328,8 @@ NextField:
 //
 // For example:
 //
-//     err1 := collection.DropIndex("firstField", "-secondField")
-//     err2 := collection.DropIndex("customIndexName")
-//
+//	err1 := collection.DropIndex("firstField", "-secondField")
+//	err2 := collection.DropIndex("customIndexName")
 func (c *Collection) DropIndex(key ...string) error {
 	keyInfo, err := parseIndexKey(key)
 	if err != nil {
@@ -1371,8 +1363,7 @@ func (c *Collection) DropIndex(key ...string) error {
 //
 // For example:
 //
-//     err := collection.DropIndex("customIndexName")
-//
+//	err := collection.DropIndex("customIndexName")
 func (c *Collection) DropIndexName(name string) error {
 	session := c.Database.Session
 
@@ -1423,16 +1414,16 @@ func (c *Collection) DropIndexName(name string) error {
 //
 // For example, this snippet would drop all available indexes:
 //
-//   indexes, err := collection.Indexes()
-//   if err != nil {
-//       return err
-//   }
-//   for _, index := range indexes {
-//       err = collection.DropIndex(index.Key...)
-//       if err != nil {
-//           return err
-//       }
-//   }
+//	indexes, err := collection.Indexes()
+//	if err != nil {
+//	    return err
+//	}
+//	for _, index := range indexes {
+//	    err = collection.DropIndex(index.Key...)
+//	    if err != nil {
+//	        return err
+//	    }
+//	}
 //
 // See the EnsureIndex method for more details on indexes.
 func (c *Collection) Indexes() (indexes []Index, err error) {
@@ -1568,7 +1559,6 @@ func (s *Session) ResetIndexCache() {
 // for the Dial function.
 //
 // See the Copy and Clone methods.
-//
 func (s *Session) New() *Session {
 	s.m.Lock()
 	scopy := copySession(s, false)
@@ -1754,8 +1744,7 @@ func (s *Session) SetPoolLimit(limit int) {
 //
 // Relevant documentation:
 //
-//   https://docs.mongodb.org/manual/release-notes/3.2/#bypass-validation
-//
+//	https://docs.mongodb.org/manual/release-notes/3.2/#bypass-validation
 func (s *Session) SetBypassValidation(bypass bool) {
 	s.m.Lock()
 	s.bypassValidation = bypass
@@ -1784,8 +1773,8 @@ func (s *Session) SetBatch(n int) {
 // Iter, the next batch will be requested in background. For instance, when
 // using this:
 //
-//     session.SetBatch(200)
-//     session.SetPrefetch(0.25)
+//	session.SetBatch(200)
+//	session.SetPrefetch(0.25)
 //
 // and there are only 50 documents cached in the Iter to be processed, the
 // next batch of 200 will be requested. It's possible to change this setting on
@@ -1868,32 +1857,31 @@ func (s *Session) Safe() (safe *Safe) {
 // For example, the following statement will make the session check for
 // errors, without imposing further constraints:
 //
-//     session.SetSafe(&mgo.Safe{})
+//	session.SetSafe(&mgo.Safe{})
 //
 // The following statement will force the server to wait for a majority of
 // members of a replica set to return (MongoDB 2.0+ only):
 //
-//     session.SetSafe(&mgo.Safe{WMode: "majority"})
+//	session.SetSafe(&mgo.Safe{WMode: "majority"})
 //
 // The following statement, on the other hand, ensures that at least two
 // servers have flushed the change to disk before confirming the success
 // of operations:
 //
-//     session.EnsureSafe(&mgo.Safe{W: 2, FSync: true})
+//	session.EnsureSafe(&mgo.Safe{W: 2, FSync: true})
 //
 // The following statement, on the other hand, disables the verification
 // of errors entirely:
 //
-//     session.SetSafe(nil)
+//	session.SetSafe(nil)
 //
 // See also the EnsureSafe method.
 //
 // Relevant documentation:
 //
-//     http://www.mongodb.org/display/DOCS/getLastError+Command
-//     http://www.mongodb.org/display/DOCS/Verifying+Propagation+of+Writes+with+getLastError
-//     http://www.mongodb.org/display/DOCS/Data+Center+Awareness
-//
+//	http://www.mongodb.org/display/DOCS/getLastError+Command
+//	http://www.mongodb.org/display/DOCS/Verifying+Propagation+of+Writes+with+getLastError
+//	http://www.mongodb.org/display/DOCS/Data+Center+Awareness
 func (s *Session) SetSafe(safe *Safe) {
 	s.m.Lock()
 	s.safeOp = nil
@@ -1907,27 +1895,26 @@ func (s *Session) SetSafe(safe *Safe) {
 //
 // That is:
 //
-//     - safe.WMode is always used if set.
-//     - safe.W is used if larger than the current W and WMode is empty.
-//     - safe.FSync is always used if true.
-//     - safe.J is used if FSync is false.
-//     - safe.WTimeout is used if set and smaller than the current WTimeout.
+//   - safe.WMode is always used if set.
+//   - safe.W is used if larger than the current W and WMode is empty.
+//   - safe.FSync is always used if true.
+//   - safe.J is used if FSync is false.
+//   - safe.WTimeout is used if set and smaller than the current WTimeout.
 //
 // For example, the following statement will ensure the session is
 // at least checking for errors, without enforcing further constraints.
 // If a more conservative SetSafe or EnsureSafe call was previously done,
 // the following call will be ignored.
 //
-//     session.EnsureSafe(&mgo.Safe{})
+//	session.EnsureSafe(&mgo.Safe{})
 //
 // See also the SetSafe method for details on what each option means.
 //
 // Relevant documentation:
 //
-//     http://www.mongodb.org/display/DOCS/getLastError+Command
-//     http://www.mongodb.org/display/DOCS/Verifying+Propagation+of+Writes+with+getLastError
-//     http://www.mongodb.org/display/DOCS/Data+Center+Awareness
-//
+//	http://www.mongodb.org/display/DOCS/getLastError+Command
+//	http://www.mongodb.org/display/DOCS/Verifying+Propagation+of+Writes+with+getLastError
+//	http://www.mongodb.org/display/DOCS/Data+Center+Awareness
 func (s *Session) EnsureSafe(safe *Safe) {
 	s.m.Lock()
 	s.ensureSafe(safe)
@@ -1987,16 +1974,15 @@ func (s *Session) ensureSafe(safe *Safe) {
 // use an ordering-preserving document, such as a struct value or an
 // instance of bson.D.  For instance:
 //
-//     db.Run(bson.D{{"create", "mycollection"}, {"size", 1024}})
+//	db.Run(bson.D{{"create", "mycollection"}, {"size", 1024}})
 //
 // For commands on arbitrary databases, see the Run method in
 // the Database type.
 //
 // Relevant documentation:
 //
-//     http://www.mongodb.org/display/DOCS/Commands
-//     http://www.mongodb.org/display/DOCS/List+of+Database+CommandSkips
-//
+//	http://www.mongodb.org/display/DOCS/Commands
+//	http://www.mongodb.org/display/DOCS/List+of+Database+CommandSkips
 func (s *Session) Run(cmd interface{}, result interface{}) error {
 	return s.DB("admin").Run(cmd, result)
 }
@@ -2006,7 +1992,7 @@ func (s *Session) Run(cmd interface{}, result interface{}) error {
 // used for reading operations to those with both tag "disk" set to
 // "ssd" and tag "rack" set to 1:
 //
-//     session.SelectServers(bson.D{{"disk", "ssd"}, {"rack", 1}})
+//	session.SelectServers(bson.D{{"disk", "ssd"}, {"rack", 1}})
 //
 // Multiple sets of tags may be provided, in which case the used server
 // must match all tags within any one set.
@@ -2017,8 +2003,7 @@ func (s *Session) Run(cmd interface{}, result interface{}) error {
 //
 // Relevant documentation:
 //
-//     http://docs.mongodb.org/manual/tutorial/configure-replica-set-tag-sets
-//
+//	http://docs.mongodb.org/manual/tutorial/configure-replica-set-tag-sets
 func (s *Session) SelectServers(tags ...bson.D) {
 	s.m.Lock()
 	s.queryConfig.op.ServerTags = tags
@@ -2052,16 +2037,15 @@ func (s *Session) Fsync(async bool) error {
 // blocks, follow up reads will block as well due to the way the
 // lock is internally implemented in the server. More details at:
 //
-//     https://jira.mongodb.org/browse/SERVER-4243
+//	https://jira.mongodb.org/browse/SERVER-4243
 //
 // FsyncLock is often used for performing consistent backups of
 // the database files on disk.
 //
 // Relevant documentation:
 //
-//     http://www.mongodb.org/display/DOCS/fsync+Command
-//     http://www.mongodb.org/display/DOCS/Backups
-//
+//	http://www.mongodb.org/display/DOCS/fsync+Command
+//	http://www.mongodb.org/display/DOCS/Backups
 func (s *Session) FsyncLock() error {
 	return s.Run(bson.D{{"fsync", 1}, {"lock", true}}, nil)
 }
@@ -2090,9 +2074,8 @@ func (s *Session) FsyncUnlock() error {
 //
 // Relevant documentation:
 //
-//     http://www.mongodb.org/display/DOCS/Querying
-//     http://www.mongodb.org/display/DOCS/Advanced+Queries
-//
+//	http://www.mongodb.org/display/DOCS/Querying
+//	http://www.mongodb.org/display/DOCS/Advanced+Queries
 func (c *Collection) Find(query interface{}) *Query {
 	session := c.Database.Session
 	session.m.RLock()
@@ -2148,7 +2131,7 @@ func (c *Collection) Repair() *Iter {
 
 // FindId is a convenience helper equivalent to:
 //
-//     query := collection.Find(bson.M{"_id": id})
+//	query := collection.Find(bson.M{"_id": id})
 //
 // See the Find method for more details.
 func (c *Collection) FindId(id interface{}) *Query {
@@ -2180,15 +2163,14 @@ type pipeCmdCursor struct {
 //
 // For example:
 //
-//     pipe := collection.Pipe([]bson.M{{"$match": bson.M{"name": "Otavio"}}})
-//     iter := pipe.Iter()
+//	pipe := collection.Pipe([]bson.M{{"$match": bson.M{"name": "Otavio"}}})
+//	iter := pipe.Iter()
 //
 // Relevant documentation:
 //
-//     http://docs.mongodb.org/manual/reference/aggregation
-//     http://docs.mongodb.org/manual/applications/aggregation
-//     http://docs.mongodb.org/manual/tutorial/aggregation-examples
-//
+//	http://docs.mongodb.org/manual/reference/aggregation
+//	http://docs.mongodb.org/manual/applications/aggregation
+//	http://docs.mongodb.org/manual/tutorial/aggregation-examples
 func (c *Collection) Pipe(pipeline interface{}) *Pipe {
 	session := c.Database.Session
 	session.m.RLock()
@@ -2262,7 +2244,6 @@ func (p *Pipe) Iter() *Iter {
 // be called on a collection in Eventual mode, because the cursor id is
 // associated with the specific server that returned it. The provided session
 // parameter may be in any mode or state, though.
-//
 func (c *Collection) NewIter(session *Session, firstBatch []bson.Raw, cursorId int64, err error) *Iter {
 	var server *MongoServer
 	csession := c.Database.Session
@@ -2333,12 +2314,11 @@ func (p *Pipe) One(result interface{}) error {
 //
 // For example:
 //
-//     var m bson.M
-//     err := collection.Pipe(pipeline).Explain(&m)
-//     if err == nil {
-//         fmt.Printf("Explain: %#v\n", m)
-//     }
-//
+//	var m bson.M
+//	err := collection.Pipe(pipeline).Explain(&m)
+//	if err == nil {
+//	    fmt.Printf("Explain: %#v\n", m)
+//	}
 func (p *Pipe) Explain(result interface{}) error {
 	c := p.collection
 	cmd := pipeCmd{
@@ -2443,9 +2423,8 @@ func (c *Collection) Insert(docs ...interface{}) error {
 //
 // Relevant documentation:
 //
-//     http://www.mongodb.org/display/DOCS/Updating
-//     http://www.mongodb.org/display/DOCS/Atomic+Operations
-//
+//	http://www.mongodb.org/display/DOCS/Updating
+//	http://www.mongodb.org/display/DOCS/Atomic+Operations
 func (c *Collection) Update(selector interface{}, update interface{}) error {
 	if selector == nil {
 		selector = bson.D{}
@@ -2464,7 +2443,7 @@ func (c *Collection) Update(selector interface{}, update interface{}) error {
 
 // UpdateId is a convenience helper equivalent to:
 //
-//     err := collection.Update(bson.M{"_id": id}, update)
+//	err := collection.Update(bson.M{"_id": id}, update)
 //
 // See the Update method for more details.
 func (c *Collection) UpdateId(id interface{}, update interface{}) error {
@@ -2487,9 +2466,8 @@ type ChangeInfo struct {
 //
 // Relevant documentation:
 //
-//     http://www.mongodb.org/display/DOCS/Updating
-//     http://www.mongodb.org/display/DOCS/Atomic+Operations
-//
+//	http://www.mongodb.org/display/DOCS/Updating
+//	http://www.mongodb.org/display/DOCS/Atomic+Operations
 func (c *Collection) UpdateAll(selector interface{}, update interface{}) (info *ChangeInfo, err error) {
 	if selector == nil {
 		selector = bson.D{}
@@ -2518,9 +2496,8 @@ func (c *Collection) UpdateAll(selector interface{}, update interface{}) (info *
 //
 // Relevant documentation:
 //
-//     http://www.mongodb.org/display/DOCS/Updating
-//     http://www.mongodb.org/display/DOCS/Atomic+Operations
-//
+//	http://www.mongodb.org/display/DOCS/Updating
+//	http://www.mongodb.org/display/DOCS/Atomic+Operations
 func (c *Collection) Upsert(selector interface{}, update interface{}) (info *ChangeInfo, err error) {
 	if selector == nil {
 		selector = bson.D{}
@@ -2546,7 +2523,7 @@ func (c *Collection) Upsert(selector interface{}, update interface{}) (info *Cha
 
 // UpsertId is a convenience helper equivalent to:
 //
-//     info, err := collection.Upsert(bson.M{"_id": id}, update)
+//	info, err := collection.Upsert(bson.M{"_id": id}, update)
 //
 // See the Upsert method for more details.
 func (c *Collection) UpsertId(id interface{}, update interface{}) (info *ChangeInfo, err error) {
@@ -2561,8 +2538,7 @@ func (c *Collection) UpsertId(id interface{}, update interface{}) (info *ChangeI
 //
 // Relevant documentation:
 //
-//     http://www.mongodb.org/display/DOCS/Removing
-//
+//	http://www.mongodb.org/display/DOCS/Removing
 func (c *Collection) Remove(selector interface{}) error {
 	if selector == nil {
 		selector = bson.D{}
@@ -2576,7 +2552,7 @@ func (c *Collection) Remove(selector interface{}) error {
 
 // RemoveId is a convenience helper equivalent to:
 //
-//     err := collection.Remove(bson.M{"_id": id})
+//	err := collection.Remove(bson.M{"_id": id})
 //
 // See the Remove method for more details.
 func (c *Collection) RemoveId(id interface{}) error {
@@ -2590,8 +2566,7 @@ func (c *Collection) RemoveId(id interface{}) error {
 //
 // Relevant documentation:
 //
-//     http://www.mongodb.org/display/DOCS/Removing
-//
+//	http://www.mongodb.org/display/DOCS/Removing
 func (c *Collection) RemoveAll(selector interface{}) (info *ChangeInfo, err error) {
 	if selector == nil {
 		selector = bson.D{}
@@ -2617,9 +2592,8 @@ func (c *Collection) DropCollection() error {
 //
 // Relevant documentation:
 //
-//     http://www.mongodb.org/display/DOCS/createCollection+Command
-//     http://www.mongodb.org/display/DOCS/Capped+Collections
-//
+//	http://www.mongodb.org/display/DOCS/createCollection+Command
+//	http://www.mongodb.org/display/DOCS/Capped+Collections
 type CollectionInfo struct {
 	// DisableIdIndex prevents the automatic creation of the index
 	// on the _id field for the collection.
@@ -2647,9 +2621,8 @@ type CollectionInfo struct {
 //
 // Relevant documentation:
 //
-//     http://www.mongodb.org/display/DOCS/createCollection+Command
-//     http://www.mongodb.org/display/DOCS/Capped+Collections
-//
+//	http://www.mongodb.org/display/DOCS/createCollection+Command
+//	http://www.mongodb.org/display/DOCS/Capped+Collections
 func (c *Collection) Create(info *CollectionInfo) error {
 	cmd := make(bson.D, 0, 4)
 	cmd = append(cmd, bson.DocElem{"create", c.Name})
@@ -2694,7 +2667,7 @@ func (q *Query) Batch(n int) *Query {
 // When there are p*batch_size remaining documents cached in an Iter, the next
 // batch will be requested in background. For instance, when using this:
 //
-//     query.Batch(200).Prefetch(0.25)
+//	query.Batch(200).Prefetch(0.25)
 //
 // and there are only 50 documents cached in the Iter to be processed, the
 // next batch of 200 will be requested. It's possible to change this setting on
@@ -2744,12 +2717,11 @@ func (q *Query) Limit(n int) *Query {
 // Select enables selecting which fields should be retrieved for the results
 // found. For example, the following query would only retrieve the name field:
 //
-//     err := collection.Find(nil).Select(bson.M{"name": 1}).One(&result)
+//	err := collection.Find(nil).Select(bson.M{"name": 1}).One(&result)
 //
 // Relevant documentation:
 //
-//     http://www.mongodb.org/display/DOCS/Retrieving+a+Subset+of+Fields
-//
+//	http://www.mongodb.org/display/DOCS/Retrieving+a+Subset+of+Fields
 func (q *Query) Select(selector interface{}) *Query {
 	q.m.Lock()
 	q.op.Selector = selector
@@ -2763,15 +2735,14 @@ func (q *Query) Select(selector interface{}) *Query {
 //
 // For example:
 //
-//     query1 := collection.Find(nil).Sort("firstname", "lastname")
-//     query2 := collection.Find(nil).Sort("-age")
-//     query3 := collection.Find(nil).Sort("$natural")
-//     query4 := collection.Find(nil).Select(bson.M{"score": bson.M{"$meta": "textScore"}}).Sort("$textScore:score")
+//	query1 := collection.Find(nil).Sort("firstname", "lastname")
+//	query2 := collection.Find(nil).Sort("-age")
+//	query3 := collection.Find(nil).Sort("$natural")
+//	query4 := collection.Find(nil).Select(bson.M{"score": bson.M{"$meta": "textScore"}}).Sort("$textScore:score")
 //
 // Relevant documentation:
 //
-//     http://www.mongodb.org/display/DOCS/Sorting+and+Natural+Order
-//
+//	http://www.mongodb.org/display/DOCS/Sorting+and+Natural+Order
 func (q *Query) Sort(fields ...string) *Query {
 	q.m.Lock()
 	var order bson.D
@@ -2815,17 +2786,16 @@ func (q *Query) Sort(fields ...string) *Query {
 //
 // For example:
 //
-//     m := bson.M{}
-//     err := collection.Find(bson.M{"filename": name}).Explain(m)
-//     if err == nil {
-//         fmt.Printf("Explain: %#v\n", m)
-//     }
+//	m := bson.M{}
+//	err := collection.Find(bson.M{"filename": name}).Explain(m)
+//	if err == nil {
+//	    fmt.Printf("Explain: %#v\n", m)
+//	}
 //
 // Relevant documentation:
 //
-//     http://www.mongodb.org/display/DOCS/Optimization
-//     http://www.mongodb.org/display/DOCS/Query+Optimizer
-//
+//	http://www.mongodb.org/display/DOCS/Optimization
+//	http://www.mongodb.org/display/DOCS/Query+Optimizer
 func (q *Query) Explain(result interface{}) error {
 	q.m.Lock()
 	clone := &Query{session: q.session, query: q.query}
@@ -2850,14 +2820,13 @@ func (q *Query) Explain(result interface{}) error {
 //
 // For example:
 //
-//     query := collection.Find(bson.M{"firstname": "Joe", "lastname": "Winter"})
-//     query.Hint("lastname", "firstname")
+//	query := collection.Find(bson.M{"firstname": "Joe", "lastname": "Winter"})
+//	query.Hint("lastname", "firstname")
 //
 // Relevant documentation:
 //
-//     http://www.mongodb.org/display/DOCS/Optimization
-//     http://www.mongodb.org/display/DOCS/Query+Optimizer
-//
+//	http://www.mongodb.org/display/DOCS/Optimization
+//	http://www.mongodb.org/display/DOCS/Query+Optimizer
 func (q *Query) Hint(indexKey ...string) *Query {
 	q.m.Lock()
 	keyInfo, err := parseIndexKey(indexKey)
@@ -2890,29 +2859,28 @@ func (q *Query) SetMaxScan(n int) *Query {
 //
 // A few important notes about the mechanism enforcing this limit:
 //
-//  - Requests can block behind locking operations on the server, and that blocking
-//    time is not accounted for. In other words, the timer starts ticking only after
-//    the actual start of the query when it initially acquires the appropriate lock;
+//   - Requests can block behind locking operations on the server, and that blocking
+//     time is not accounted for. In other words, the timer starts ticking only after
+//     the actual start of the query when it initially acquires the appropriate lock;
 //
-//  - Operations are interrupted only at interrupt points where an operation can be
-//    safely aborted – the total execution time may exceed the specified value;
+//   - Operations are interrupted only at interrupt points where an operation can be
+//     safely aborted – the total execution time may exceed the specified value;
 //
-//  - The limit can be applied to both CRUD operations and commands, but not all
-//    commands are interruptible;
+//   - The limit can be applied to both CRUD operations and commands, but not all
+//     commands are interruptible;
 //
-//  - While iterating over results, computing follow up batches is included in the
-//    total time and the iteration continues until the alloted time is over, but
-//    network roundtrips are not taken into account for the limit.
+//   - While iterating over results, computing follow up batches is included in the
+//     total time and the iteration continues until the alloted time is over, but
+//     network roundtrips are not taken into account for the limit.
 //
-//  - This limit does not override the inactive cursor timeout for idle cursors
-//    (default is 10 min).
+//   - This limit does not override the inactive cursor timeout for idle cursors
+//     (default is 10 min).
 //
 // This mechanism was introduced in MongoDB 2.6.
 //
 // Relevant documentation:
 //
-//   http://blog.mongodb.org/post/83621787773/maxtimems-and-query-optimizer-introspection-in
-//
+//	http://blog.mongodb.org/post/83621787773/maxtimems-and-query-optimizer-introspection-in
 func (q *Query) SetMaxTime(d time.Duration) *Query {
 	q.m.Lock()
 	q.op.Options.MaxTimeMS = int(d / time.Millisecond)
@@ -2942,8 +2910,7 @@ func (q *Query) SetMaxTime(d time.Duration) *Query {
 //
 // Relevant documentation:
 //
-//     http://www.mongodb.org/display/DOCS/How+to+do+Snapshotted+Queries+in+the+Mongo+Database
-//
+//	http://www.mongodb.org/display/DOCS/How+to+do+Snapshotted+Queries+in+the+Mongo+Database
 func (q *Query) Snapshot() *Query {
 	q.m.Lock()
 	q.op.Options.Snapshot = true
@@ -2956,10 +2923,9 @@ func (q *Query) Snapshot() *Query {
 //
 // Relevant documentation:
 //
-//     http://docs.mongodb.org/manual/reference/operator/meta/comment
-//     http://docs.mongodb.org/manual/reference/command/profile
-//     http://docs.mongodb.org/manual/administration/analyzing-mongodb-performance/#database-profiling
-//
+//	http://docs.mongodb.org/manual/reference/operator/meta/comment
+//	http://docs.mongodb.org/manual/reference/command/profile
+//	http://docs.mongodb.org/manual/administration/analyzing-mongodb-performance/#database-profiling
 func (q *Query) Comment(comment string) *Query {
 	q.m.Lock()
 	q.op.Options.Comment = comment
@@ -3020,7 +2986,7 @@ Error:
 // unmarshalled into by gobson.  This function blocks until either a result
 // is available or an error happens.  For example:
 //
-//     err := collection.Find(bson.M{"a", 1}).One(&result)
+//	err := collection.Find(bson.M{"a", 1}).One(&result)
 //
 // In case the resulting document includes a field named $err or errmsg, which
 // are standard ways for MongoDB to return query errors, the returned err will
@@ -3028,7 +2994,6 @@ Error:
 // those cases, the result argument is still unmarshalled into with the
 // received document so that any other custom values may be obtained if
 // desired.
-//
 func (q *Query) One(result interface{}) (err error) {
 	q.m.Lock()
 	session := q.session
@@ -3115,8 +3080,7 @@ func (db *Database) run(socket *MongoSocket, cmd, result interface{}) (replyOp *
 //
 // Relevant documentation:
 //
-//     http://www.mongodb.org/display/DOCS/Database+References
-//
+//	http://www.mongodb.org/display/DOCS/Database+References
 type DBRef struct {
 	Collection string      `bson:"$ref"`
 	Id         interface{} `bson:"$id"`
@@ -3133,8 +3097,7 @@ type DBRef struct {
 //
 // Relevant documentation:
 //
-//     http://www.mongodb.org/display/DOCS/Database+References
-//
+//	http://www.mongodb.org/display/DOCS/Database+References
 func (db *Database) FindRef(ref *DBRef) *Query {
 	var c *Collection
 	if ref.Database == "" {
@@ -3153,8 +3116,7 @@ func (db *Database) FindRef(ref *DBRef) *Query {
 //
 // Relevant documentation:
 //
-//     http://www.mongodb.org/display/DOCS/Database+References
-//
+//	http://www.mongodb.org/display/DOCS/Database+References
 func (s *Session) FindRef(ref *DBRef) *Query {
 	if ref.Database == "" {
 		panic(errors.New(fmt.Sprintf("Can't resolve database for %#v", ref)))
@@ -3320,29 +3282,28 @@ func (q *Query) Iter() *Iter {
 // The following example demonstrates timeout handling and query
 // restarting:
 //
-//    iter := collection.Find(nil).Sort("$natural").Tail(5 * time.Second)
-//    for {
-//         for iter.Next(&result) {
-//             fmt.Println(result.Id)
-//             lastId = result.Id
-//         }
-//         if iter.Err() != nil {
-//             return iter.Close()
-//         }
-//         if iter.Timeout() {
-//             continue
-//         }
-//         query := collection.Find(bson.M{"_id": bson.M{"$gt": lastId}})
-//         iter = query.Sort("$natural").Tail(5 * time.Second)
-//    }
-//    iter.Close()
+//	iter := collection.Find(nil).Sort("$natural").Tail(5 * time.Second)
+//	for {
+//	     for iter.Next(&result) {
+//	         fmt.Println(result.Id)
+//	         lastId = result.Id
+//	     }
+//	     if iter.Err() != nil {
+//	         return iter.Close()
+//	     }
+//	     if iter.Timeout() {
+//	         continue
+//	     }
+//	     query := collection.Find(bson.M{"_id": bson.M{"$gt": lastId}})
+//	     iter = query.Sort("$natural").Tail(5 * time.Second)
+//	}
+//	iter.Close()
 //
 // Relevant documentation:
 //
-//     http://www.mongodb.org/display/DOCS/Tailable+Cursors
-//     http://www.mongodb.org/display/DOCS/Capped+Collections
-//     http://www.mongodb.org/display/DOCS/Sorting+and+Natural+Order
-//
+//	http://www.mongodb.org/display/DOCS/Tailable+Cursors
+//	http://www.mongodb.org/display/DOCS/Capped+Collections
+//	http://www.mongodb.org/display/DOCS/Sorting+and+Natural+Order
 func (q *Query) Tail(timeout time.Duration) *Iter {
 	debug("Tail\n")
 	q.m.Lock()
@@ -3473,14 +3434,13 @@ func (iter *Iter) Timeout() bool {
 //
 // For example:
 //
-//    iter := collection.Find(nil).Iter()
-//    for iter.Next(&result) {
-//        fmt.Printf("Result: %v\n", result.Id)
-//    }
-//    if err := iter.Close(); err != nil {
-//        return err
-//    }
-//
+//	iter := collection.Find(nil).Iter()
+//	for iter.Next(&result) {
+//	    fmt.Printf("Result: %v\n", result.Id)
+//	}
+//	if err := iter.Close(); err != nil {
+//	    return err
+//	}
 func (iter *Iter) Next(result interface{}) bool {
 	iter.m.Lock()
 	iter.timedout = false
@@ -3579,13 +3539,12 @@ func (iter *Iter) Next(result interface{}) bool {
 //
 // For instance:
 //
-//    var result []struct{ Value int }
-//    iter := collection.Find(nil).Limit(100).Iter()
-//    err := iter.All(&result)
-//    if err != nil {
-//        return err
-//    }
-//
+//	var result []struct{ Value int }
+//	iter := collection.Find(nil).Limit(100).Iter()
+//	err := iter.All(&result)
+//	if err != nil {
+//	    return err
+//	}
 func (iter *Iter) All(result interface{}) error {
 	resultv := reflect.ValueOf(result)
 	if resultv.Kind() != reflect.Ptr || resultv.Elem().Kind() != reflect.Slice {
@@ -3760,13 +3719,12 @@ type distinctCmd struct {
 //
 // For example:
 //
-//     var result []int
-//     err := collection.Find(bson.M{"gender": "F"}).Distinct("age", &result)
+//	var result []int
+//	err := collection.Find(bson.M{"gender": "F"}).Distinct("age", &result)
 //
 // Relevant documentation:
 //
-//     http://www.mongodb.org/display/DOCS/Aggregation
-//
+//	http://www.mongodb.org/display/DOCS/Aggregation
 func (q *Query) Distinct(key string, result interface{}) error {
 	q.m.Lock()
 	session := q.session
@@ -3850,52 +3808,51 @@ type MapReduceTime struct {
 //
 // These are some of the ways to set Out:
 //
-//     nil
-//         Inline results into the result parameter.
+//	nil
+//	    Inline results into the result parameter.
 //
-//     bson.M{"replace": "mycollection"}
-//         The output will be inserted into a collection which replaces any
-//         existing collection with the same name.
+//	bson.M{"replace": "mycollection"}
+//	    The output will be inserted into a collection which replaces any
+//	    existing collection with the same name.
 //
-//     bson.M{"merge": "mycollection"}
-//         This option will merge new data into the old output collection. In
-//         other words, if the same key exists in both the result set and the
-//         old collection, the new key will overwrite the old one.
+//	bson.M{"merge": "mycollection"}
+//	    This option will merge new data into the old output collection. In
+//	    other words, if the same key exists in both the result set and the
+//	    old collection, the new key will overwrite the old one.
 //
-//     bson.M{"reduce": "mycollection"}
-//         If documents exist for a given key in the result set and in the old
-//         collection, then a reduce operation (using the specified reduce
-//         function) will be performed on the two values and the result will be
-//         written to the output collection. If a finalize function was
-//         provided, this will be run after the reduce as well.
+//	bson.M{"reduce": "mycollection"}
+//	    If documents exist for a given key in the result set and in the old
+//	    collection, then a reduce operation (using the specified reduce
+//	    function) will be performed on the two values and the result will be
+//	    written to the output collection. If a finalize function was
+//	    provided, this will be run after the reduce as well.
 //
-//     bson.M{...., "db": "mydb"}
-//         Any of the above options can have the "db" key included for doing
-//         the respective action in a separate database.
+//	bson.M{...., "db": "mydb"}
+//	    Any of the above options can have the "db" key included for doing
+//	    the respective action in a separate database.
 //
 // The following is a trivial example which will count the number of
 // occurrences of a field named n on each document in a collection, and
 // will return results inline:
 //
-//     job := &mgo.MapReduce{
-//             Map:      "function() { emit(this.n, 1) }",
-//             Reduce:   "function(key, values) { return Array.sum(values) }",
-//     }
-//     var result []struct { Id int "_id"; Value int }
-//     _, err := collection.Find(nil).MapReduce(job, &result)
-//     if err != nil {
-//         return err
-//     }
-//     for _, item := range result {
-//         fmt.Println(item.Value)
-//     }
+//	job := &mgo.MapReduce{
+//	        Map:      "function() { emit(this.n, 1) }",
+//	        Reduce:   "function(key, values) { return Array.sum(values) }",
+//	}
+//	var result []struct { Id int "_id"; Value int }
+//	_, err := collection.Find(nil).MapReduce(job, &result)
+//	if err != nil {
+//	    return err
+//	}
+//	for _, item := range result {
+//	    fmt.Println(item.Value)
+//	}
 //
 // This function is compatible with MongoDB 1.7.4+.
 //
 // Relevant documentation:
 //
-//     http://www.mongodb.org/display/DOCS/MapReduce
-//
+//	http://www.mongodb.org/display/DOCS/MapReduce
 func (q *Query) MapReduce(job *MapReduce, result interface{}) (info *MapReduceInfo, err error) {
 	q.m.Lock()
 	session := q.session
@@ -3975,8 +3932,7 @@ func (q *Query) MapReduce(job *MapReduce, result interface{}) (info *MapReduceIn
 // so rather than breaking the API, we'll fix the order if necessary.
 // Details about the order requirement may be seen in MongoDB's code:
 //
-//     http://goo.gl/L8jwJX
-//
+//	http://goo.gl/L8jwJX
 func fixMROut(out interface{}) interface{} {
 	outv := reflect.ValueOf(out)
 	if outv.Kind() != reflect.Map || outv.Type().Key() != reflect.TypeOf("") {
@@ -4032,21 +3988,20 @@ type valueResult struct {
 //
 // This simple example increments a counter and prints its new value:
 //
-//     change := mgo.Change{
-//             Update: bson.M{"$inc": bson.M{"n": 1}},
-//             ReturnNew: true,
-//     }
-//     info, err = col.Find(M{"_id": id}).Apply(change, &doc)
-//     fmt.Println(doc.N)
+//	change := mgo.Change{
+//	        Update: bson.M{"$inc": bson.M{"n": 1}},
+//	        ReturnNew: true,
+//	}
+//	info, err = col.Find(M{"_id": id}).Apply(change, &doc)
+//	fmt.Println(doc.N)
 //
 // This method depends on MongoDB >= 2.0 to work properly.
 //
 // Relevant documentation:
 //
-//     http://www.mongodb.org/display/DOCS/findAndModify+Command
-//     http://www.mongodb.org/display/DOCS/Updating
-//     http://www.mongodb.org/display/DOCS/Atomic+Operations
-//
+//	http://www.mongodb.org/display/DOCS/findAndModify+Command
+//	http://www.mongodb.org/display/DOCS/Updating
+//	http://www.mongodb.org/display/DOCS/Atomic+Operations
 func (q *Query) Apply(change Change, result interface{}) (info *ChangeInfo, err error) {
 	q.m.Lock()
 	session := q.session
