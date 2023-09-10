@@ -4,6 +4,7 @@ go 1.13
 
 require (
 	github.com/10gen/escaper v0.0.0-20160802155924-17fe61c658dc
+	github.com/DataDog/zstd v1.5.5
 	github.com/golang/snappy v0.0.1
 	github.com/google/gopacket v1.1.17
 	github.com/howeyc/gopass v0.0.0-20190910152052-7cb4b85ec19c

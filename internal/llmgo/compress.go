@@ -6,6 +6,7 @@ import (
 	"fmt"
 	"io"
 
+	"github.com/DataDog/zstd"
 	"github.com/golang/snappy"
 )
 
@@ -22,6 +23,7 @@ const (
 	noopCompressorId   = 0
 	snappyCompressorId = 1
 	zlibCompressorId   = 2
+	zstdCompressorId   = 3
 )
 
 var (
@@ -31,6 +33,7 @@ var (
 			noopCompressorId:   new(noopMessageCompressor),
 			snappyCompressorId: new(snappyMessageCompressor),
 			zlibCompressorId:   new(zlibMessageCompressor),
+			zstdCompressorId:   new(zstdMessageCompressor),
 		},
 	}
 )
@@ -207,6 +210,54 @@ func (zlibMessageCompressor) decompressData(dst, src []byte) (n int, err error) 
 	if err != nil {
 		return
 	}
+	_, err = buf.ReadFrom(rdr)
+	if err != nil {
+		return
+	}
+	err = rdr.Close()
+	if err != nil {
+		return
+	}
+	if buf.Len() > len(dst) {
+		err = io.ErrShortBuffer
+		return
+	}
+	copy(dst, buf.Bytes())
+	n = buf.Len()
+	return
+}
+
+type zstdMessageCompressor struct{}
+
+func (zstdMessageCompressor) getId() uint8    { return zstdCompressorId }
+func (zstdMessageCompressor) getName() string { return "zstd" }
+func (zstdMessageCompressor) getMaxCompressedSize(srcLen int) int {
+	return zstd.CompressBound(srcLen)
+}
+
+func (zstdMessageCompressor) compressData(dst, src []byte) (n int, err error) {
+	var buf bytes.Buffer
+	wtr := zstd.NewWriter(&buf)
+	_, err = wtr.Write(src)
+	if err != nil {
+		return
+	}
+	err = wtr.Close()
+	if err != nil {
+		return
+	}
+	if buf.Len() > len(dst) {
+		err = io.ErrShortBuffer
+		return
+	}
+	copy(dst, buf.Bytes())
+	n = buf.Len()
+	return
+}
+
+func (zstdMessageCompressor) decompressData(dst, src []byte) (n int, err error) {
+	var buf bytes.Buffer
+	rdr := zstd.NewReader(bytes.NewReader(src))
 	_, err = buf.ReadFrom(rdr)
 	if err != nil {
 		return
