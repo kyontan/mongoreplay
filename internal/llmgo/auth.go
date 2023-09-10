@@ -155,6 +155,7 @@ func (socket *MongoSocket) resetNonce() {
 }
 
 func (socket *MongoSocket) Login(cred Credential) error {
+	debugf("Socket %p: Login", socket)
 	socket.Lock()
 	maxWire := socket.serverInfo.MaxWireVersion
 	socket.Unlock()
