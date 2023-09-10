@@ -240,6 +240,8 @@ func (socket *MongoSocket) negotiateDefaultMech(cred Credential) (string, error)
 }
 
 func (socket *MongoSocket) loginClassic(cred Credential) error {
+	debugf("Using loginClassic")
+
 	// Note that this only works properly because this function is
 	// synchronous, which means the nonce won't get reset while we're
 	// using it and any other login requests will block waiting for a
@@ -295,6 +297,8 @@ func (socket *MongoSocket) loginX509(cred Credential) error {
 }
 
 func (socket *MongoSocket) loginPlain(cred Credential) error {
+	debugf("Using loginPlain")
+
 	cmd := saslCmd{Start: 1, Mechanism: "PLAIN", Payload: []byte("\x00" + cred.Username + "\x00" + cred.Password)}
 	res := authResult{}
 	return socket.loginRun(cred.Source, &cmd, &res, func() error {
@@ -310,6 +314,8 @@ func (socket *MongoSocket) loginPlain(cred Credential) error {
 }
 
 func (socket *MongoSocket) loginSASL(cred Credential) error {
+	debugf("Using loginSASL")
+
 	var sasl saslStepper
 	var err error
 	// SCRAM is handled without external libraries.
@@ -394,6 +400,8 @@ func (socket *MongoSocket) loginSASL(cred Credential) error {
 }
 
 func saslNewScram1(cred Credential) *saslScram {
+	debugf("Using saslNewScram1")
+
 	credsum := md5.New()
 	credsum.Write([]byte(cred.Username + ":mongo:" + cred.Password))
 	client := scram.NewClient(sha1.New, cred.Username, hex.EncodeToString(credsum.Sum(nil)))
@@ -401,6 +409,8 @@ func saslNewScram1(cred Credential) *saslScram {
 }
 
 func saslNewScram256(cred Credential) (*saslScram, error) {
+	debugf("Using saslNewScram256")
+
 	preppedPass, err := stringprep.SASLprep.Prepare(cred.Password)
 	if err != nil {
 		return nil, err
