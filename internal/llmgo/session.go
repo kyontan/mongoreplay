@@ -624,7 +624,7 @@ func (db *Database) Run(cmd interface{}, result interface{}) error {
 
 // returns metadata, bodydata, an array of reply documents, a reply, and an error
 func ExecOpWithReply(socket *MongoSocket, op OpWithReply) ([]byte, []byte, [][]byte, interface{}, error) {
-	debug("ExecOpWithReply\n")
+	debug("socket %p: ExecOpWithReply\n", socket)
 	var wait sync.Mutex
 	var reply interface{}
 	var err error
@@ -691,7 +691,7 @@ func ExecOpWithReply(socket *MongoSocket, op OpWithReply) ([]byte, []byte, [][]b
 }
 
 func ExecOpWithoutReply(socket *MongoSocket, op interface{}) error {
-	debug("ExecOpWithoutReply\n")
+	debug("socket %p: ExecOpWithoutReply\n", socket)
 	err := socket.Query(op)
 	if err != nil {
 		return err
@@ -764,9 +764,9 @@ func (s *Session) Login(cred *Credential) error {
 }
 
 func (s *Session) socketLogin(socket *MongoSocket) error {
-	debug("socketLogin\n")
+	debug("socket %p: socketLogin\n", socket)
 	for _, cred := range s.creds {
-		debug("socketLogin - calls socket.Login\n")
+		debug("socket %p: socketLogin - calls socket.Login\n", socket)
 		if err := socket.Login(cred); err != nil {
 			return err
 		}
@@ -3220,7 +3220,7 @@ func (s *Session) DatabaseNames() (names []string, err error) {
 // size (see the Batch method) and more documents will be requested when a
 // configurable number of documents is iterated over (see the Prefetch method).
 func (q *Query) Iter() *Iter {
-	debug("Iter\n")
+	debug("socket %p: Iter\n", socket)
 	q.m.Lock()
 	session := q.session
 	op := q.op
@@ -3307,7 +3307,7 @@ func (q *Query) Iter() *Iter {
 //	http://www.mongodb.org/display/DOCS/Capped+Collections
 //	http://www.mongodb.org/display/DOCS/Sorting+and+Natural+Order
 func (q *Query) Tail(timeout time.Duration) *Iter {
-	debug("Tail\n")
+	debug("socket %p: Tail\n", socket)
 	q.m.Lock()
 	session := q.session
 	op := q.op
@@ -3384,7 +3384,7 @@ func (iter *Iter) Err() error {
 // standard ways for MongoDB to report an improper query, the returned value has
 // a *QueryError type.
 func (iter *Iter) Close() error {
-	debug("Close\n")
+	debug("socket %p: Close\n", socket)
 	iter.m.Lock()
 	cursorId := iter.op.CursorId
 	iter.op.CursorId = 0
@@ -3622,7 +3622,7 @@ func (iter *Iter) For(result interface{}, f func() error) (err error) {
 // socket depends on the cluster sync loop, and the cluster sync loop might
 // attempt actions which cause replyFunc to be called, inducing a deadlock.
 func (iter *Iter) acquireSocket() (*MongoSocket, error) {
-	debug("acquireSocket\n")
+	debug("socket %p: acquireSocket\n", socket)
 	socket, err := iter.session.AcquireSocketPrivate(true)
 	if err != nil {
 		return nil, err
@@ -4125,7 +4125,7 @@ func (s *Session) BuildInfo() (info BuildInfo, err error) {
 // Internal session handling helpers.
 
 func (s *Session) AcquireSocketPrivate(slaveOk bool) (*MongoSocket, error) {
-	debug("AcquireSocketPrivate\n")
+	debug("socket %p: AcquireSocketPrivate\n", socket)
 
 	// Read-only lock to check for previously reserved socket.
 	s.m.RLock()
@@ -4189,7 +4189,7 @@ func (s *Session) AcquireSocketPrivate(slaveOk bool) (*MongoSocket, error) {
 }
 
 func (s *Session) AcquireSocketDirect() (*MongoSocket, error) {
-	debug("AcquireSocketDirect\n")
+	debug("socket %p: AcquireSocketDirect\n", socket)
 	sock, err := s.cluster().AcquireSocket(Strong, false, s.syncTimeout, s.sockTimeout, s.queryConfig.op.ServerTags, s.poolLimit)
 	if err != nil {
 		return nil, err
@@ -4385,7 +4385,7 @@ func (c *Collection) writeOp(op interface{}, ordered bool) (lerr *LastError, err
 }
 
 func (c *Collection) writeOpQuery(socket *MongoSocket, safeOp *QueryOp, op interface{}, ordered bool) (lerr *LastError, err error) {
-	debug("writeOpQuery\n")
+	debug("socket %p: writeOpQuery\n", socket)
 	if safeOp == nil {
 		return nil, socket.Query(op)
 	}
