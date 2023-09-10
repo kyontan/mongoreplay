@@ -3220,7 +3220,7 @@ func (s *Session) DatabaseNames() (names []string, err error) {
 // size (see the Batch method) and more documents will be requested when a
 // configurable number of documents is iterated over (see the Prefetch method).
 func (q *Query) Iter() *Iter {
-	debug("socket %p: Iter\n", socket)
+	debug("Iter\n")
 	q.m.Lock()
 	session := q.session
 	op := q.op
@@ -3307,7 +3307,7 @@ func (q *Query) Iter() *Iter {
 //	http://www.mongodb.org/display/DOCS/Capped+Collections
 //	http://www.mongodb.org/display/DOCS/Sorting+and+Natural+Order
 func (q *Query) Tail(timeout time.Duration) *Iter {
-	debug("socket %p: Tail\n", socket)
+	debug("Tail\n")
 	q.m.Lock()
 	session := q.session
 	op := q.op
@@ -3384,7 +3384,7 @@ func (iter *Iter) Err() error {
 // standard ways for MongoDB to report an improper query, the returned value has
 // a *QueryError type.
 func (iter *Iter) Close() error {
-	debug("socket %p: Close\n", socket)
+	debug("Close\n")
 	iter.m.Lock()
 	cursorId := iter.op.CursorId
 	iter.op.CursorId = 0
@@ -3622,7 +3622,7 @@ func (iter *Iter) For(result interface{}, f func() error) (err error) {
 // socket depends on the cluster sync loop, and the cluster sync loop might
 // attempt actions which cause replyFunc to be called, inducing a deadlock.
 func (iter *Iter) acquireSocket() (*MongoSocket, error) {
-	debug("socket %p: acquireSocket\n", socket)
+	debug("acquireSocket\n")
 	socket, err := iter.session.AcquireSocketPrivate(true)
 	if err != nil {
 		return nil, err
@@ -4125,7 +4125,7 @@ func (s *Session) BuildInfo() (info BuildInfo, err error) {
 // Internal session handling helpers.
 
 func (s *Session) AcquireSocketPrivate(slaveOk bool) (*MongoSocket, error) {
-	debug("socket %p: AcquireSocketPrivate\n", socket)
+	debug("AcquireSocketPrivate\n")
 
 	// Read-only lock to check for previously reserved socket.
 	s.m.RLock()
@@ -4189,7 +4189,7 @@ func (s *Session) AcquireSocketPrivate(slaveOk bool) (*MongoSocket, error) {
 }
 
 func (s *Session) AcquireSocketDirect() (*MongoSocket, error) {
-	debug("socket %p: AcquireSocketDirect\n", socket)
+	debug("AcquireSocketDirect\n")
 	sock, err := s.cluster().AcquireSocket(Strong, false, s.syncTimeout, s.sockTimeout, s.queryConfig.op.ServerTags, s.poolLimit)
 	if err != nil {
 		return nil, err
