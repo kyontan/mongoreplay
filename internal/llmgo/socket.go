@@ -799,7 +799,7 @@ func (socket *MongoSocket) readLoop() {
 
 		// Don't use socket.server.Addr here.  socket is not
 		// locked and socket.server may go away.
-		debugf("Socket %p (maybe %v/tcp) to %s: got reply (%d bytes)", socket, socket.server.tcpaddr.Port, socket.addr, totalLen)
+		debugf("Socket %p (maybe %v) to %s: got reply (%d bytes)", socket, socket.Conn.LocalAddr().String(), socket.addr, totalLen)
 
 		socket.Lock()
 		replyFunc, ok := socket.replyFuncs[uint32(responseTo)]
