@@ -114,6 +114,7 @@ func IsDriverOp(op Op) bool {
 	case *CommandOp:
 		commandType = castOp.CommandName
 	default:
+		toolDebugLogger.Logvf(DebugHigh, "IsDriverOp 3 -> false")
 		return false
 	}
 
