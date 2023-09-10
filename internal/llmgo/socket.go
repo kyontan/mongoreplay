@@ -532,7 +532,7 @@ func (socket *MongoSocket) Query(ops ...interface{}) (err error) {
 	requestCount := 0
 
 	for _, op := range ops {
-		debugf("Socket %p to %s: serializing op: %#v", socket, socket.addr, op)
+		debugf("Socket %p (maybe %v) to %s: serializing op: %#v", socket, socket.Conn.LocalAddr().String(), socket.addr, op)
 		start := len(buf)
 		var replyFunc replyFunc
 		switch op := op.(type) {
