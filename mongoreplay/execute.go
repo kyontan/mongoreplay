@@ -202,6 +202,11 @@ func (context *ExecutionContext) newExecutionConnection(start time.Time, connect
 					}
 				}
 				userInfoLogger.Logvf(DebugHigh, "(Connection %v) op %v", connectionNum, recordedOp.String())
+
+				if connectionNum > 1 {
+					userInfoLogger.Logvf(DebugHigh, "(Connection %v) **Skip** op %v", connectionNum, recordedOp.String())
+					continue
+				}
 				parsedOp, reply, err = context.Execute(recordedOp, socket)
 				if err != nil {
 					toolDebugLogger.Logvf(Always, "context.Execute error: %v", err)
