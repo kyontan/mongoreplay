@@ -7,6 +7,8 @@
 package mongoreplay
 
 import (
+	"fmt"
+
 	mgo "github.com/mongodb-labs/mongoreplay/internal/llmgo"
 )
 
@@ -33,6 +35,7 @@ func (opts *Options) SetLogging() {
 	if d > 0 || v > 0 {
 		printVersionInfo(opts.VersionStr, opts.GitCommit)
 	}
+	fmt.Printf("debugLevel: %v", d)
 	if d == DebugHigh {
 		mgo.SetLogger(toolDebugLogger)
 		mgo.SetDebug(true)
