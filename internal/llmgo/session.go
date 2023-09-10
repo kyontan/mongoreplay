@@ -628,6 +628,7 @@ func (db *Database) Run(cmd interface{}, result interface{}) error {
 
 //returns metadata, bodydata, an array of reply documents, a reply, and an error
 func ExecOpWithReply(socket *MongoSocket, op OpWithReply) ([]byte, []byte, [][]byte, interface{}, error) {
+	debug("ExecOpWithReply\n")
 	var wait sync.Mutex
 	var reply interface{}
 	var err error
@@ -694,6 +695,7 @@ func ExecOpWithReply(socket *MongoSocket, op OpWithReply) ([]byte, []byte, [][]b
 }
 
 func ExecOpWithoutReply(socket *MongoSocket, op interface{}) error {
+	debug("ExecOpWithoutReply\n")
 	err := socket.Query(op)
 	if err != nil {
 		return err
@@ -3254,6 +3256,7 @@ func (s *Session) DatabaseNames() (names []string, err error) {
 // size (see the Batch method) and more documents will be requested when a
 // configurable number of documents is iterated over (see the Prefetch method).
 func (q *Query) Iter() *Iter {
+	debug("Iter\n")
 	q.m.Lock()
 	session := q.session
 	op := q.op
@@ -3341,6 +3344,7 @@ func (q *Query) Iter() *Iter {
 //     http://www.mongodb.org/display/DOCS/Sorting+and+Natural+Order
 //
 func (q *Query) Tail(timeout time.Duration) *Iter {
+	debug("Tail\n")
 	q.m.Lock()
 	session := q.session
 	op := q.op
@@ -3417,6 +3421,7 @@ func (iter *Iter) Err() error {
 // standard ways for MongoDB to report an improper query, the returned value has
 // a *QueryError type.
 func (iter *Iter) Close() error {
+	debug("Close\n")
 	iter.m.Lock()
 	cursorId := iter.op.CursorId
 	iter.op.CursorId = 0
@@ -4420,6 +4425,7 @@ func (c *Collection) writeOp(op interface{}, ordered bool) (lerr *LastError, err
 }
 
 func (c *Collection) writeOpQuery(socket *MongoSocket, safeOp *QueryOp, op interface{}, ordered bool) (lerr *LastError, err error) {
+	debug("writeOpQuery\n")
 	if safeOp == nil {
 		return nil, socket.Query(op)
 	}

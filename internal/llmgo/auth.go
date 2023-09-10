@@ -433,6 +433,7 @@ func (s *saslScram) Step(serverData []byte) (clientData []byte, done bool, err e
 }
 
 func (socket *MongoSocket) loginRun(db string, query, result interface{}, f func() error) error {
+	debug("loginRun")
 	var mutex sync.Mutex
 	var replyErr error
 	mutex.Lock()

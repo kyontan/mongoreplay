@@ -484,6 +484,7 @@ func (socket *MongoSocket) kill(err error, abend bool) {
 }
 
 func (socket *MongoSocket) SimpleQuery(op *QueryOp) (data []byte, replyOp *ReplyOp, err error) {
+	debug("SimpleQuery\n")
 	var wait, change sync.Mutex
 	var replyDone bool
 	var replyData []byte
