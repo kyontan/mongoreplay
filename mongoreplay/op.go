@@ -10,7 +10,7 @@ import (
 	"fmt"
 	"io"
 
-	"github.com/mongodb-labs/mongoreplay/internal/llmgo"
+	mgo "github.com/mongodb-labs/mongoreplay/internal/llmgo"
 )
 
 // ErrNotMsg is returned if a provided buffer is too small to contain a Mongo message
@@ -101,11 +101,13 @@ func (e ErrUnknownOpcode) Error() string {
 // unmarshalled using its 'FromReader' method and checks if it is a command
 // matching the ones the driver generates.
 func IsDriverOp(op Op) bool {
+	toolDebugLogger.Logvf(DebugHigh, "IsDriverOp")
 	var commandType string
 	var opType string
 	switch castOp := op.(type) {
 	case *QueryOp:
 		opType, commandType = extractOpType(castOp.QueryOp.Query)
+		toolDebugLogger.Logvf(DebugHigh, "IsDriverOp 1(commandType=%v)", commandType)
 		if opType != "command" {
 			return false
 		}
@@ -114,6 +116,8 @@ func IsDriverOp(op Op) bool {
 	default:
 		return false
 	}
+
+	toolDebugLogger.Logvf(DebugHigh, "IsDriverOp 2(commandType=%v)", commandType)
 
 	switch commandType {
 	case "isMaster", "ismaster":
