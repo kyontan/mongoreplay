@@ -624,7 +624,7 @@ func (db *Database) Run(cmd interface{}, result interface{}) error {
 
 // returns metadata, bodydata, an array of reply documents, a reply, and an error
 func ExecOpWithReply(socket *MongoSocket, op OpWithReply) ([]byte, []byte, [][]byte, interface{}, error) {
-	debug("socket %p: ExecOpWithReply\n", socket)
+	debug(fmt.Sprintf("socket %p: ExecOpWithReply\n", socket))
 	var wait sync.Mutex
 	var reply interface{}
 	var err error
@@ -691,7 +691,7 @@ func ExecOpWithReply(socket *MongoSocket, op OpWithReply) ([]byte, []byte, [][]b
 }
 
 func ExecOpWithoutReply(socket *MongoSocket, op interface{}) error {
-	debug("socket %p: ExecOpWithoutReply\n", socket)
+	debug(fmt.Sprintf("socket %p: ExecOpWithoutReply\n", socket))
 	err := socket.Query(op)
 	if err != nil {
 		return err
@@ -764,9 +764,9 @@ func (s *Session) Login(cred *Credential) error {
 }
 
 func (s *Session) socketLogin(socket *MongoSocket) error {
-	debug("socket %p: socketLogin\n", socket)
+	debug(fmt.Sprintf("socket %p: socketLogin\n", socket))
 	for _, cred := range s.creds {
-		debug("socket %p: socketLogin - calls socket.Login\n", socket)
+		debug(fmt.Sprintf("socket %p: socketLogin - calls socket.Login\n", socket))
 		if err := socket.Login(cred); err != nil {
 			return err
 		}
@@ -4385,7 +4385,7 @@ func (c *Collection) writeOp(op interface{}, ordered bool) (lerr *LastError, err
 }
 
 func (c *Collection) writeOpQuery(socket *MongoSocket, safeOp *QueryOp, op interface{}, ordered bool) (lerr *LastError, err error) {
-	debug("socket %p: writeOpQuery\n", socket)
+	debug(fmt.Sprintf("socket %p: writeOpQuery\n", socket))
 	if safeOp == nil {
 		return nil, socket.Query(op)
 	}
