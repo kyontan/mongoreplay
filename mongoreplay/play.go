@@ -9,6 +9,7 @@ package mongoreplay
 import (
 	"fmt"
 	"io"
+	"os"
 	"strings"
 	"time"
 
@@ -20,16 +21,17 @@ import (
 type PlayCommand struct {
 	GlobalOpts *Options `no-flag:"true"`
 	StatOptions
-	PlaybackFile string       `description:"path to the playback file to play from" short:"p" long:"playback-file" required:"yes"`
-	Speed        float64      `description:"multiplier for playback speed (1.0 = real-time, .5 = half-speed, 3.0 = triple-speed, etc.)" long:"speed" default:"1.0"`
-	URL          string       `short:"h" long:"host" env:"MONGOREPLAY_HOST" description:"Location of the host to play back against" default:"mongodb://localhost:27017"`
-	Repeat       int          `long:"repeat" description:"Number of times to play the playback file" default:"1"`
-	QueueTime    int          `long:"queueTime" description:"don't queue ops much further in the future than this number of seconds" default:"15"`
-	NoPreprocess bool         `long:"no-preprocess" description:"don't preprocess the input file to premap data such as mongo cursorIDs"`
-	Gzip         bool         `long:"gzip" description:"decompress gzipped input"`
-	Collect      string       `long:"collect" description:"Stat collection format; 'format' option uses the --format string" choice:"json" choice:"format" choice:"none" default:"none"`
-	FullSpeed    bool         `long:"fullSpeed" description:"run the playback as fast as possible"`
-	SSLOpts      *options.SSL `no-flag:"true"`
+	PlaybackFile   string       `description:"path to the playback file to play from" short:"p" long:"playback-file" required:"yes"`
+	Speed          float64      `description:"multiplier for playback speed (1.0 = real-time, .5 = half-speed, 3.0 = triple-speed, etc.)" long:"speed" default:"1.0"`
+	URL            string       `short:"h" long:"host" env:"MONGOREPLAY_HOST" description:"Location of the host to play back against" default:"mongodb://localhost:27017"`
+	Repeat         int          `long:"repeat" description:"Number of times to play the playback file" default:"1"`
+	QueueTime      int          `long:"queueTime" description:"don't queue ops much further in the future than this number of seconds" default:"15"`
+	NoPreprocess   bool         `long:"no-preprocess" description:"don't preprocess the input file to premap data such as mongo cursorIDs"`
+	OnlyPreprocess bool         `long:"only-preprocess" description:"only run preprocess steps"`
+	Gzip           bool         `long:"gzip" description:"decompress gzipped input"`
+	Collect        string       `long:"collect" description:"Stat collection format; 'format' option uses the --format string" choice:"json" choice:"format" choice:"none" default:"none"`
+	FullSpeed      bool         `long:"fullSpeed" description:"run the playback as fast as possible"`
+	SSLOpts        *options.SSL `no-flag:"true"`
 }
 
 const queueGranularity = 1000
@@ -113,6 +115,10 @@ func (play *PlayCommand) Execute(args []string) error {
 
 		if err != nil {
 			return fmt.Errorf("PreprocessMap: %v", err)
+		}
+
+		if play.OnlyPreprocess {
+			os.Exit(0)
 		}
 
 		err = <-errChan

@@ -7,6 +7,7 @@
 package mongoreplay
 
 import (
+	"fmt"
 	"strconv"
 	"sync"
 	"time"
@@ -243,6 +244,8 @@ func newPreprocessCursorManager(opChan <-chan *RecordedOp) (*preprocessCursorMan
 				replyConn:   counter.replyConn,
 			}
 			result.opToCursors[counter.opOriginKey] = cursorID
+			fmt.Printf("cursorInfos: %v\t%v\t%v\n", cursorID, counter.usesSeen, counter.replyConn)
+			fmt.Printf("opToCursors: %v\t%v\n", counter.opOriginKey, cursorID)
 		}
 	}
 	userInfoLogger.Logvf(Always, "Preprocess complete")
