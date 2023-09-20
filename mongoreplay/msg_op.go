@@ -144,7 +144,7 @@ func (op *MsgOp) Execute(socket *mgo.MongoSocket) (Replyable, error) {
 	_, sectionsData, _, resultReply, err := mgo.ExecOpWithReply(socket, &op.MsgOp)
 	after := time.Now()
 	if err != nil {
-		return nil, err
+		return nil, fmt.Errorf("error on ExecOpWithReply: %v", err)
 	}
 	replyAsMsgOp, ok := resultReply.(*mgo.MsgOp)
 	if !ok {
@@ -161,14 +161,14 @@ func (op *MsgOp) Execute(socket *mgo.MongoSocket) (Replyable, error) {
 	for len(sectionsData)-offset > 0 {
 		section, length, err := readSection(reader)
 		if err != nil {
-			return nil, err
+			return nil, fmt.Errorf("error on readSection: %v", err)
 		}
 		offset += length
 		msgOp.Sections = append(msgOp.Sections, section)
 		docs, err := getCursorDocsFromMsgSection(section)
 
 		if err != nil {
-			return nil, err
+			return nil, fmt.Errorf("error on getCursorDocsFromMsgSection: %v", err)
 		}
 		resultDocs = append(resultDocs, docs...)
 	}
