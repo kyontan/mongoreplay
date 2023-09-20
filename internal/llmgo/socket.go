@@ -690,7 +690,9 @@ func (socket *MongoSocket) Query(ops ...interface{}) (err error) {
 			}
 			// check if the checksum should be present
 			if op.Flags&MsgFlagChecksumPresent != 0 {
-				buf = addInt32(buf, int32(op.Checksum))
+				// XXX: skip adding checksum
+				op.Flags = op.Flags - MsgFlagChecksumPresent
+				// buf = addInt32(buf, int32(op.Checksum))
 			}
 			replyFunc = op.replyFunc
 
