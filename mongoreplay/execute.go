@@ -269,7 +269,7 @@ func (context *ExecutionContext) Execute(op *RecordedOp, socket *mgo.MongoSocket
 
 		if err != nil {
 			context.CursorIDMap.MarkFailed(op)
-			return opToExec, reply, fmt.Errorf("error executing op: %v", err)
+			return opToExec, reply, fmt.Errorf("error executing op: %+v, err: %v", op, err)
 		}
 		if reply != nil {
 			context.AddFromWire(reply, op)
